@@ -8,6 +8,7 @@
 import Foundation
 
 extension OperationQueue {
+    @discardableResult
     public func run<T>(isBarrier: Bool = false, _ block: @escaping () -> T) async -> T {
         await withCheckedContinuation { continuation in
             if isBarrier {
@@ -22,6 +23,7 @@ extension OperationQueue {
         }
     }
     
+    @discardableResult
     public func run<T>(isBarrier: Bool = false, _ block: @escaping () throws -> T) async throws -> T {
         try await withCheckedThrowingContinuation { continuation in
             if isBarrier {
