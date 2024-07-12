@@ -19,7 +19,7 @@ fileprivate struct OrderElement<Element: Sendable>: Comparable, Sendable {
     let element: Element
 }
 
-public func withOrderTask<T, S: Sequence>(sequence: S, _ operation: @escaping @Sendable (S.Element) async -> T ) async -> [T] where T : Sendable {
+public func withOrderTask<T, S: Sequence>(sequence: S, _ operation: @escaping @Sendable (S.Element) async -> T ) async -> [T] where T : Sendable, S.Element: Sendable {
     return await withTaskGroup(of: OrderElement<T>.self) { group in
         for (index, element) in sequence.enumerated() {
             group.addTask {
@@ -33,7 +33,7 @@ public func withOrderTask<T, S: Sequence>(sequence: S, _ operation: @escaping @S
     }
 }
 
-public func withThrowingOrderTask<T, S: Sequence>(sequence: S, _ operation: @escaping @Sendable (S.Element) async throws -> T) async throws -> [T] where T : Sendable {
+public func withThrowingOrderTask<T, S: Sequence>(sequence: S, _ operation: @escaping @Sendable (S.Element) async throws -> T) async throws -> [T] where T : Sendable, S.Element: Sendable {
     return try await withThrowingTaskGroup(of: OrderElement<T>.self) { group in
         for (index, element) in sequence.enumerated() {
             group.addTask {

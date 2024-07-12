@@ -9,7 +9,7 @@ import Foundation
 
 extension DispatchQueue {
     @discardableResult
-    public func run<T>(flags: DispatchWorkItemFlags = [], _ block: @escaping () -> T) async -> T {
+    public func run<T>(flags: DispatchWorkItemFlags = [], _ block: @escaping @Sendable () -> T) async -> T {
         await withCheckedContinuation { continuation in
             self.async(flags: flags) {
                 continuation.resume(returning: block())
@@ -18,7 +18,7 @@ extension DispatchQueue {
     }
     
     @discardableResult
-    public func run<T>(flags: DispatchWorkItemFlags = [], _ block: @escaping () throws -> T) async throws -> T {
+    public func run<T>(flags: DispatchWorkItemFlags = [], _ block: @escaping @Sendable () throws -> T) async throws -> T {
         try await withCheckedThrowingContinuation { continuation in
             self.async(flags: flags) {
                 continuation.resume(with: Result(catching: block))
